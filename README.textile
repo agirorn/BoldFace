@@ -1,0 +1,6 @@
+BoldFace is a Bookmarklet to test Google Web fonts on any site
+
+How to use:
+  "Drag this link to the bookmark bara":https://github.com/agirorn/BoldFace
+  then go to a site you want to test the fonts on and click the link.
+  
