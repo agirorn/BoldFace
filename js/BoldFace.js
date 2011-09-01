@@ -24,7 +24,7 @@
     var css, element;
     
     css = '#BoldFace * {font-family: Arial;font-size: 14px; }';
-    css = css + '#BoldFace {-moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;background: #FFF;font-family: Arial;position: absolute;top: 60px;left: 60px;border: 4px solid blue;width: 600px;height: 350px; }';
+    css = css + '#BoldFace {-moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;background: #FFF;font-family: Arial;position: fixed;top: 60px;left: 60px;border: 4px solid blue;width: 600px;height: 350px; }';
     css = css + '#BoldFace h1 {padding: 5px 15px;margin: 0px;background: blue;color: #FFF; }';
     css = css + '#BoldFace #font_list {float: left;clear: right;width: 200px;height: 300px;overflow: overlay;border: 1px solid black; }';
     css = css + '#BoldFace #font_list .fontList {padding: 0px;margin: 0px;list-style-type: none;}';
