@@ -6,8 +6,6 @@
   var BoldFace = {};
   BoldFace.mode = 'production';
   
-  BoldFace.mode = 'development';
-  
   BoldFace.bookmarklet_host = function () {
     if (BoldFace.mode === 'development') {
       return 'http://0.0.0.0:9000';
