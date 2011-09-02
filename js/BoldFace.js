@@ -7,6 +7,7 @@
   BoldFace.mode = 'production';
   
   BoldFace.mode = 'development';
+  BoldFace.html = '<div></div>';
   
   BoldFace.bookmarklet_host = function () {
     if (BoldFace.mode === 'development') {
@@ -28,13 +29,17 @@
     // element = $("<div id='BoldFace'><h1>BoldFace</h1><div id='font_list'><ul class='fontList'></ul></div><div><div class='property'><div class='name'><span>Family: </span><span>Abel</span></div><div class='variants'><span>Variants: </span><span><select multiple><option>regular</option></select></span></div><div class='subsets'><span>Subsets: </span><span><select multiple><option>latin</option></select></span></div>      <div class='size'><span>Size: </span><span><ul><li>8px</li><li>10px</li><li>12px</li><li>14px</li><li>16px</li><li>20px</li><li>22px</li><li>24px</li><li>26px</li><li>28px</li></ul></span></div></div></div></div>");
     // $('body').append(element);
     // 
-    var url = BoldFace.bookmarklet_host() + '/agirorn/BoldFace/master/build/BoldFace.html';
-    console.log(url);
-    $.ajax({
-      url: url,
-      // context: document.body,
-      success: BoldFace.htmlToBodyReady
-    });
+    // var url = BoldFace.bookmarklet_host() + '/agirorn/BoldFace/master/build/BoldFace.html';
+    // console.log(url);
+    // $.ajax({
+    //   url: url,
+    //   // context: document.body,
+    //   success: BoldFace.htmlToBodyReady
+    // });
+    $('body').append($(BoldFace.html));
+    $("#BoldFace").draggable({handle: 'h1'});
+    BoldFace.setupSelectionList();
+    BoldFace.populateFontsList();
   };
   
   BoldFace.htmlToBodyReady = function(data, textStatus, jqXHR) {

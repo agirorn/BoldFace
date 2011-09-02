@@ -45,7 +45,7 @@ task :compile_html do
   puts output
 end
 
-desc "Compile the JavaScript js/BoldFace.js into buld/BoldFace-mini.js"
+desc "Compile the sass/BoldFace.scss into build/BoldFace.css"
 task :compile_sass do
   args = [
     ["--style", "compressed"],
@@ -57,5 +57,25 @@ task :compile_sass do
   output = `#{command}`
   puts output
 end
-task :build_all_small => [:compile_sass, :compile_html, :compile_js_data_small, :compile_js]
-task :build_all => [:compile_sass, :compile_html, :compile_js_data, :compile_js]
+
+
+desc "Add the compresed html file as a varable into the js file."
+task :add_html_to_js => [:compile_js, :compile_html] do
+  html = File.open('build/BoldFace.html') { |file| file.collect {|line| line} }.join('')
+  puts html
+  js = [
+    '(function (window, document) {',
+    'BoldFace.html = ' + '"' + html + '";',
+    '}(this, this.document));'
+  ]
+  File.open('build/BoldFace-mini.js', mode="a") do |file|
+    js.each do |line|
+      file.puts line
+    end
+  end
+end
+
+
+
+task :build_all_small => [:compile_sass, :add_html_to_js, :compile_js_data_small, :compile_js]
+task :build_all => [:compile_sass, :add_html_to_js, :compile_js_data, :compile_js]

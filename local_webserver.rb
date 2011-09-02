@@ -29,7 +29,15 @@ class MyApp < Sinatra::Base
   
   get '/agirorn/BoldFace/master/build/BoldFace.js' do
     content_type Rack::Mime.mime_type('.js'), :charset => 'utf-8'
-    get_file_content('js/BoldFace.js')
+    file_data = get_file_content('js/BoldFace.js')
+    html = File.open('build/BoldFace.html') { |file| file.collect {|line| line} }.join('')
+    js = [
+      '(function (window, document) {',
+      'BoldFace.html = ' + '"' + html + '";',
+      '}(this, this.document));'
+    ]
+    
+    file_data + js
   end
   
   get '/agirorn/BoldFace/master/build/BoldFace.css' do
