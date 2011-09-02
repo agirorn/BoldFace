@@ -74,11 +74,13 @@ task :add_html_to_js => [:compile_js, :compile_html] do
   #   end
   # end
   new_html = 'BoldFace.html = ' + '"' + html + '";'
+  new_bookmarklet_host = "BoldFace.bookmarklet_host = 'https://raw.github.com';"
   file_to_fix = 'build/BoldFace-mini.js'
 
   text = File.read(file_to_fix)
   text.gsub!("BoldFace.mode = 'development';", "BoldFace.mode = 'production';")
   text.gsub!("BoldFace.html = '<div></div>';", new_html)
+  text.gsub!("BoldFace.bookmarklet_host = 'http://0.0.0.0:9000';", new_bookmarklet_host)
   File.open(file_to_fix, 'w') { |f| f.write(text) }
   
 end
