@@ -66,7 +66,7 @@
   BoldFace.move_list_up_or_down = function (e) { 
     var selected, next_to_select, focused = $('.focused');
     if (focused.length >= 1) {
-      selected = $('.selected');
+      selected = focused.find('.selected');
       if (e.which === 40) {
         if (selected.parent().children('li').index(selected) !== selected.siblings().length) {
           next_to_select = selected.next();
@@ -90,7 +90,7 @@
 
   BoldFace.select_item = function (e) {
     e.preventDefault();
-    $('#BoldFace .focused .selected').removeClass('selected');
+    $(e.target).parent().find('.selected').removeClass('selected');
     $('#BoldFace .focused').removeClass('focused');
     $(e.target).parent().addClass('focused');
     $(e.target).parent('.focused').find('.selected').removeClass('selected');
@@ -107,15 +107,43 @@
     _.each(GoogleWebFonts.items, function (font) {
       herf_family = font.family.replace(/ /g, '+');
       link = $("<link rel='stylesheet' type='text/css'>");
-      link.attr('href', base_href + herf_family);
+      href = base_href + herf_family
+      if (font.variants.length > 1) {
+        href = href + ':' + _.select(font.variants, function(item){ return !(item === "regular"); }).join(',');
+      }
+      link.attr('href', href);
       head.append(link);
     });
   };
   
   BoldFace.selectionChanged = function () {
-    var elements = $('*').filter(':not(#BoldFace *)');
+    var selector = $('#BoldFace .selector').val();
+    var elements = $(selector).filter(':not(#BoldFace *)');
     elements.css('font-family', $('#BoldFace #font_list .selected').text());
     elements.css('font-size', $('#BoldFace .size ul .selected').text());
+    var font_name = $('#BoldFace #font_list .selected').text();
+    var font = _.detect(GoogleWebFonts.items, function(item){return item.family === font_name;});
+    if (font_name !== '') {
+      BoldFace.setVariants(font);
+    }
+  };
+  
+  BoldFace.setVariants = function (font) {
+    var element, select = $('.variants select');
+    select.html('');
+    _.each(font.variants, function(item){
+      element = $('<option>' + item + '</option>');
+      select.append(element);
+    });
+  };
+  
+  BoldFace.setSubsets = function (font) {
+    var element, select = $('.subsets select');
+    select.html('');
+    _.each(font.subsets, function(item){
+      element = $('<option>' + item + '</option>');
+      select.append(element);
+    });
   };
   
   BoldFace.load_js = function (javascript) {

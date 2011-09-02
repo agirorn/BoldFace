@@ -8,7 +8,7 @@
   BoldFace.version = '0.0.2';
   
   BoldFace.mode = 'production';
-  BoldFace.html = "<div id='BoldFace'> <h1>BoldFace</h1> <div id='font_list'> <ul class='fontList'></ul> </div> <div> <div class='property'> <div class='name'> <span>Family: </span> <span>Abel</span> </div> <div class='variants'> <span>Variants: </span> <span> <select multiple> <option>regular</option> </select> </span> </div> <div class='subsets'> <span>Subsets: </span> <span> <select multiple> <option>latin</option> </select> </span> </div> <div class='size'> <span>Size: </span> <span> <ul> <li>8px</li> <li>10px</li> <li>12px</li> <li>14px</li> <li>16px</li> <li>20px</li> <li>22px</li> <li>24px</li> <li>26px</li> <li>28px</li> </ul> </span> </div> </div> </div> </div>";
+  BoldFace.html = "<div id='BoldFace'> <h1>BoldFace</h1> <div id='font_list'> <ul class='fontList'></ul> </div> <div> <div class='property'> <div class='name'> <label for='selector'>Family: </label> <input type='text' name='selector' value='*' class='selector'> </div> <div class='name'> <span>Family: </span> <span>Abel</span> </div> <div class='variants'> <span>Variants: </span> <span> <select multiple> <option>regular</option> </select> </span> </div> <div class='subsets'> <span>Subsets: </span> <span> <select multiple> <option>latin</option> </select> </span> </div> <div class='size'> <span>Size: </span> <span> <ul> <li>8px</li> <li>10px</li> <li>12px</li> <li>14px</li> <li>16px</li> <li>20px</li> <li>22px</li> <li>24px</li> <li>26px</li> <li>28px</li> <li>30px</li> <li>32px</li> <li>34px</li> <li>36px</li> <li>38px</li> <li>40px</li> <li>42px</li> <li>44px</li> <li>46px</li> <li>48px</li> <li>60px</li> <li>62px</li> <li>64px</li> <li>66px</li> <li>68px</li> <li>70px</li> <li>72px</li> <li>74px</li> <li>76px</li> <li>78px</li> <li>80px</li> <li>82px</li> <li>84px</li> <li>86px</li> <li>88px</li> </ul> </span> </div> </div> </div> </div>";
   BoldFace.bookmarklet_host = 'https://raw.github.com';
   
   BoldFace.init = function () {
@@ -66,7 +66,7 @@
   BoldFace.move_list_up_or_down = function (e) { 
     var selected, next_to_select, focused = $('.focused');
     if (focused.length >= 1) {
-      selected = $('.selected');
+      selected = focused.find('.selected');
       if (e.which === 40) {
         if (selected.parent().children('li').index(selected) !== selected.siblings().length) {
           next_to_select = selected.next();
@@ -90,7 +90,7 @@
 
   BoldFace.select_item = function (e) {
     e.preventDefault();
-    $('#BoldFace .focused .selected').removeClass('selected');
+    $(e.target).parent().find('.selected').removeClass('selected');
     $('#BoldFace .focused').removeClass('focused');
     $(e.target).parent().addClass('focused');
     $(e.target).parent('.focused').find('.selected').removeClass('selected');
@@ -107,15 +107,43 @@
     _.each(GoogleWebFonts.items, function (font) {
       herf_family = font.family.replace(/ /g, '+');
       link = $("<link rel='stylesheet' type='text/css'>");
-      link.attr('href', base_href + herf_family);
+      href = base_href + herf_family
+      if (font.variants.length > 1) {
+        href = href + ':' + _.select(font.variants, function(item){ return !(item === "regular"); }).join(',');
+      }
+      link.attr('href', href);
       head.append(link);
     });
   };
   
   BoldFace.selectionChanged = function () {
-    var elements = $('*').filter(':not(#BoldFace *)');
+    var selector = $('#BoldFace .selector').val();
+    var elements = $(selector).filter(':not(#BoldFace *)');
     elements.css('font-family', $('#BoldFace #font_list .selected').text());
     elements.css('font-size', $('#BoldFace .size ul .selected').text());
+    var font_name = $('#BoldFace #font_list .selected').text();
+    var font = _.detect(GoogleWebFonts.items, function(item){return item.family === font_name;});
+    if (font_name !== '') {
+      BoldFace.setVariants(font);
+    }
+  };
+  
+  BoldFace.setVariants = function (font) {
+    var element, select = $('.variants select');
+    select.html('');
+    _.each(font.variants, function(item){
+      element = $('<option>' + item + '</option>');
+      select.append(element);
+    });
+  };
+  
+  BoldFace.setSubsets = function (font) {
+    var element, select = $('.subsets select');
+    select.html('');
+    _.each(font.subsets, function(item){
+      element = $('<option>' + item + '</option>');
+      select.append(element);
+    });
   };
   
   BoldFace.load_js = function (javascript) {

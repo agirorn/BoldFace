@@ -110,10 +110,22 @@ font-size:14px;
         }
       }
     }
+    .subsets {
+      select {
+        width:90px;
+        height:60px;
+      }
+    }
+    .variants {
+      select {
+        width:90px;
+        height:60px;
+      }
+    }
   }
 }
 
-ul.focused {
+ul {
   /*
     background:#388799;
     color:#999248;
