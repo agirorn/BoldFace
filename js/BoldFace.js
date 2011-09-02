@@ -4,7 +4,8 @@
 (function (window, document) {
   
   var BoldFace = {};
-  BoldFace.mode = 'production';
+  
+  BoldFace.version = '0.0.2';
   
   BoldFace.mode = 'development';
   BoldFace.html = '<div></div>';
@@ -17,7 +18,6 @@
     }
   };
   
-  BoldFace.version = '0.0.1';
   BoldFace.init = function () {
     BoldFace.addHtmlToBody();
     BoldFace.loadGoogleWebFonts();

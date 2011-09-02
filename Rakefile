@@ -62,18 +62,25 @@ end
 desc "Add the compresed html file as a varable into the js file."
 task :add_html_to_js => [:compile_js, :compile_html] do
   html = File.open('build/BoldFace.html') { |file| file.collect {|line| line} }.join('')
-  puts html
-  js = [
-    '(function (window, document) {',
-    'BoldFace.html = ' + '"' + html + '";',
-    "BoldFace.mode = 'production';", 
-    '}(this, this.document));'
-  ]
-  File.open('build/BoldFace-mini.js', mode="a") do |file|
-    js.each do |line|
-      file.puts line
-    end
-  end
+  # puts html
+  # js = [
+  #   '(function (window, document) {',
+  #   'BoldFace.html = ' + '"' + html + '";',
+  #   '}(this, this.document));'
+  # ]
+  # File.open('build/BoldFace-mini.js', mode="a") do |file|
+  #   js.each do |line|
+  #     file.puts line
+  #   end
+  # end
+  new_html = 'BoldFace.html = ' + '"' + html + '";'
+  file_to_fix = 'build/BoldFace-mini.js'
+
+  text = File.read(file_to_fix)
+  text.gsub!("BoldFace.mode = 'development';", "BoldFace.mode = 'production';")
+  text.gsub!("BoldFace.html = '<div></div>';", new_html)
+  File.open(file_to_fix, 'w') { |f| f.write(text) }
+  
 end
 
 
