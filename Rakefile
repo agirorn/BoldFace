@@ -66,6 +66,7 @@ task :add_html_to_js => [:compile_js, :compile_html] do
   js = [
     '(function (window, document) {',
     'BoldFace.html = ' + '"' + html + '";',
+    "BoldFace.mode = 'production';", 
     '}(this, this.document));'
   ]
   File.open('build/BoldFace-mini.js', mode="a") do |file|
@@ -77,5 +78,5 @@ end
 
 
 
-task :build_all_small => [:compile_sass, :add_html_to_js, :compile_js_data_small, :compile_js]
-task :build_all => [:compile_sass, :add_html_to_js, :compile_js_data, :compile_js]
+task :build_all_small => [:add_html_to_js, :compile_js_data_small, :compile_js]
+task :build_all => [:add_html_to_js, :compile_js_data, :compile_js]
