@@ -1,0 +1,133 @@
+/*@mixin rounded($side, $radius: 10px) {
+  border-#{$side}-radius: $radius;
+  -moz-border-radius-#{$side}: $radius;
+  -webkit-border-#{$side}-radius: $radius;
+}
+
+@mixin rounded-top-left($side, $radius: 10px) {
+  border-#{$side}-radius: $radius;
+  -moz-border-radius-#{$side}: $radius;
+  -webkit-border-#{$side}-radius: $radius;
+}*/
+
+@mixin rounded-top-left($radius: 10px) {
+  -moz-border-radius-topleft: $radius;
+  -webkit-border-top-left-radius: $radius;
+  border-top-left-radius: $radius;
+}
+
+@mixin rounded-top-right($radius: 10px) {
+  -moz-border-radius-topright: $radius;
+  -webkit-border-top-right-radius: $radius;
+  border-top-right-radius: $radius;
+}
+
+@mixin rounded-bottom-left($radius: 10px) {
+  -moz-border-radius-bottomleft: $radius;
+  -webkit-border-bottom-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+}
+
+@mixin rounded-bottom-right($radius: 10px) {
+  -moz-border-radius-bottomright: $radius;
+  -webkit-border-bottom-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+}
+
+/*-moz-border-radius-topleft: 15px;
+-moz-border-radius-topright: 0px;
+-moz-border-radius-bottomright: 15px;
+-moz-border-radius-bottomleft: 0px;
+-webkit-border-top-left-radius: 15px;
+-webkit-border-top-right-radius: 0px;
+-webkit-border-bottom-left-radius: 0px;
+-webkit-border-bottom-right-radius: 15px;
+*/
+
+@mixin border-radius($radius: 10px) {
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+}
+
+#BoldFace * {
+font-family:Arial;
+font-size:14px;
+}
+#BoldFace {
+  @include border-radius(10px);
+  background:#FFF;
+  font-family:Arial;
+  position: absolute;
+  top: 60px;
+  left: 60px;
+  border: 4px solid blue;
+  width:600px;
+  height:350px;
+  
+  h1 {
+    padding:5px 15px;
+    margin:0px;
+    background:blue;
+    color:#FFF;
+  }
+  #font_list{
+    float:left;
+    clear:right;
+    width:200px;
+    height:300px;
+    overflow: overlay;
+    border:1px solid black;
+    .fontList {
+      padding:0px;
+      margin:0px;
+      list-style-type:none;
+      li {
+        padding:0px;
+        margin:0px;
+      }
+        /*
+          width:100px;
+          height:300px;*/
+    }
+
+  }
+  .property {
+    float:left;
+    width:200px;
+    height:300px;
+    .size {
+      ul {
+        padding: 0px;
+        margin: 0px;
+        width:100px;
+        height:100px;
+        overflow: overlay;
+        list-style-type: none;
+        li {
+          padding:0px;
+          margin:0px;
+        }
+      }
+    }
+  }
+}
+
+ul.focused {
+  /*
+    background:#388799;
+    color:#999248;
+  */
+  .selected {
+    font-weight:bold;
+    background:#AEAEAE;
+  }
+}
+/*.focused {
+  background:#388799;
+  color:#999248;
+  .selected {
+    background:#000;
+    color:#FFF;
+  }
+}*/
