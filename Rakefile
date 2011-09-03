@@ -16,21 +16,6 @@ task :compile_js_data_small do
 end
 
 def compile_js(in_files, out_file)
-  # Thers just somthing wrong withe the minified js from this!!!
-  # args = [
-  #   ["-jar", "tools/compiler/compiler.jar"],
-  #   ["--js_output_file", out_file],
-  #   ["--js", in_files],
-  #   # ["--warning_level", "VERBOSE"], #This just dosen not work for this hack.
-  #   ["--summary_detail_level", "3"]
-  # ]
-  # command = "java #{args.flatten.join(' ')} 2>&1"
-  # puts command
-  # output = `#{command}`
-  # puts output
-  
-  # `cp #{in_files} #{out_file}`
-  
   File.open(out_file, 'w') do |file|
     file.write Uglifier.compile(File.read(in_files))
   end
