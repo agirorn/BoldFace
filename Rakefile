@@ -89,7 +89,14 @@ task :add_html_to_js => [:compile_js, :compile_html] do
   File.open(file_to_fix, 'w') { |f| f.write(text) }
   
 end
-
+desc "build the bookmarklet.txt from js/bookmarklet.js"
+task :build_bookmarklet do
+  uglified_js = Uglifier.compile(File.read('js/bookmarklet.js'))
+  bookmarklet = "javascript:#{uglified_js}"
+  File.open('bookmarklet.txt', 'w') do |file|
+    file.write bookmarklet
+  end
+end
 
 
 task :build_all_small => [:add_html_to_js, :compile_js_data_small, :compile_js]
