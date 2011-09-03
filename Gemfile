@@ -9,3 +9,4 @@ gem 'github-markup'
 
 gem "sinatra"
 gem 'vegas'
+gem 'uglifier'

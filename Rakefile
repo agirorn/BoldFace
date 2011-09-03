@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake'
+require 'uglifier'
 
 desc "Compile the JavaScript js/BoldFace.js into buld/BoldFace-mini.js"
 task :compile_js do
@@ -28,7 +29,11 @@ def compile_js(in_files, out_file)
   # output = `#{command}`
   # puts output
   
-  `cp #{in_files} #{out_file}`
+  # `cp #{in_files} #{out_file}`
+  
+  File.open(out_file, 'w') do |file|
+    file.write Uglifier.compile(File.read(in_files))
+  end
 end
 
 

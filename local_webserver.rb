@@ -5,11 +5,27 @@ require 'rubygems'
 require 'bundler/setup'
 require 'sinatra/base'
 require 'vegas'
+require 'uglifier'
 
 class MyApp < Sinatra::Base
   helpers do
     def get_file_content(file_name)
       File.read(file_name)
+    end
+    
+    def enviroment
+      if ENV.include?('ENVIROMENT')
+        return ENV['ENVIROMENT']
+      end
+      return 'development'
+    end
+    
+    def production?
+      if enviroment == 'production'
+        return true
+      else
+        return false
+      end
     end
   end
   
@@ -29,7 +45,7 @@ class MyApp < Sinatra::Base
     html = File.read('build/BoldFace.html').gsub!('"', "'")
     new_html = 'BoldFace.html = ' + '"' + html + '";'
     text.gsub!("BoldFace.html = '<div></div>';", new_html)
-    text
+    production? ? Uglifier.compile(text) : text
   end
   
   get '/agirorn/BoldFace/master/build/BoldFace.css' do
@@ -39,7 +55,8 @@ class MyApp < Sinatra::Base
   
   get '/agirorn/BoldFace/master/build/googleWebFonts.js' do
     content_type Rack::Mime.mime_type('.js'), :charset => 'utf-8'
-    get_file_content('js/googleWebFonts.js')
+    text = get_file_content('js/googleWebFonts.js')
+    production? ? Uglifier.compile(text) : text
   end
   
 end
