@@ -3,8 +3,17 @@ require 'rake'
 require 'uglifier'
 
 desc "Compile the JavaScript js/BoldFace.js into buld/BoldFace-mini.js"
-task :compile_js do
-  compile_js("js/BoldFace.js", "build/BoldFace-min.js")
+task :compile_js => [:compile_html] do
+  html = File.read('build/BoldFace.html').gsub!('"', "'")
+  new_html = 'BoldFace.html = ' + '"' + html + '";'
+  new_bookmarklet_host = "BoldFace.bookmarklet_host = 'https://raw.github.com';"
+
+  compile_js("js/BoldFace.js", "build/BoldFace-min.js") do |text|
+    text.gsub!("BoldFace.mode = 'development';", "BoldFace.mode = 'production';")
+    text.gsub!("BoldFace.html = '<div></div>';", new_html)
+    text.gsub!("BoldFace.bookmarklet_host = 'http://0.0.0.0:9000';", new_bookmarklet_host)
+    # puts text
+  end
 end
 
 task :compile_js_data do
@@ -17,10 +26,12 @@ end
 
 def compile_js(in_files, out_file)
   File.open(out_file, 'w') do |file|
-    file.write Uglifier.compile(File.read(in_files))
+    text = File.read(in_files)
+    yield text if block_given?
+    puts text
+    file.write Uglifier.compile(text)
   end
 end
-
 
 desc "Compile the JavaScript js/BoldFace.js into buld/BoldFace-mini.js"
 task :compile_html do
@@ -48,21 +59,6 @@ task :compile_sass do
   puts output
 end
 
-
-desc "Add the compresed html file as a varable into the js file."
-task :add_html_to_js => [:compile_js, :compile_html] do
-  html = File.read('build/BoldFace.html').gsub!('"', "'")
-  new_html = 'BoldFace.html = ' + '"' + html + '";'
-  new_bookmarklet_host = "BoldFace.bookmarklet_host = 'https://raw.github.com';"
-  file_to_fix = 'build/BoldFace-mini.js'
-
-  text = File.read(file_to_fix)
-  text.gsub!("BoldFace.mode = 'development';", "BoldFace.mode = 'production';")
-  text.gsub!("BoldFace.html = '<div></div>';", new_html)
-  text.gsub!("BoldFace.bookmarklet_host = 'http://0.0.0.0:9000';", new_bookmarklet_host)
-  File.open(file_to_fix, 'w') { |f| f.write(text) }
-  
-end
 desc "build the bookmarklet.txt from js/bookmarklet.js"
 task :build_bookmarklet do
   uglified_js = Uglifier.compile(File.read('js/bookmarklet.js'))
@@ -72,6 +68,5 @@ task :build_bookmarklet do
   end
 end
 
-
-task :build_all_small => [:add_html_to_js, :compile_js_data_small, :compile_js]
-task :build_all => [:add_html_to_js, :compile_js_data, :compile_js]
+task :build_all_small => [:compile_js, :compile_js_data_small, :compile_js]
+task :build_all => [:compile_js, :compile_js_data, :compile_js]
