@@ -4,7 +4,7 @@ require 'uglifier'
 
 desc "Compile the JavaScript js/BoldFace.js into buld/BoldFace-mini.js"
 task :compile_js do
-  compile_js("js/BoldFace.js", "build/BoldFace-mini.js")
+  compile_js("js/BoldFace.js", "build/BoldFace-min.js")
 end
 
 task :compile_js_data do
