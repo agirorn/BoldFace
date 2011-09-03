@@ -55,7 +55,7 @@ class MyApp < Sinatra::Base
   
   get '/agirorn/BoldFace/master/build/googleWebFonts.js' do
     content_type Rack::Mime.mime_type('.js'), :charset => 'utf-8'
-    text = get_file_content('js/googleWebFonts.js')
+    text = production? ? get_file_content('js/googleWebFonts.js') : get_file_content('js/googleWebFonts_SMALL.js')
     production? ? Uglifier.compile(text) : text
   end
   
