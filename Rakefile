@@ -12,7 +12,6 @@ task :compile_js => [:compile_html] do
     text.gsub!("BoldFace.mode = 'development';", "BoldFace.mode = 'production';")
     text.gsub!("BoldFace.html = '<div></div>';", new_html)
     text.gsub!("BoldFace.bookmarklet_host = 'http://0.0.0.0:9000';", new_bookmarklet_host)
-    # puts text
   end
 end
 
@@ -28,7 +27,6 @@ def compile_js(in_files, out_file)
   File.open(out_file, 'w') do |file|
     text = File.read(in_files)
     yield text if block_given?
-    puts text
     file.write Uglifier.compile(text)
   end
 end

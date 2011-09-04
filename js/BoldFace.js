@@ -12,8 +12,11 @@
   BoldFace.bookmarklet_host = 'http://0.0.0.0:9000';
   
   BoldFace.init = function () {
-    BoldFace.loadDependencies();
-    BoldFace.init_after_jQueryIsLoaded();
+    BoldFace.addLoadingScreen();
+    // setTimeout(function() {
+      BoldFace.loadDependencies();
+      BoldFace.init_after_jQueryIsLoaded();
+    // },500);
   };
 
   BoldFace.loadDependencies = function () {
@@ -21,15 +24,15 @@
     BoldFace.load_js('cdnjs.cloudflare.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js');
     BoldFace.load_js('cdnjs.cloudflare.com/ajax/libs/underscore.js/1.1.7/underscore-min.js');
     BoldFace.load_app_js('/agirorn/BoldFace/master/build/googleWebFonts.js');
-    BoldFace.load_app_css('/agirorn/BoldFace/master/build/BoldFace.css');
   }
   
   
   BoldFace.addHtmlToBody = function () {
-    $('body').append($(BoldFace.html));
+    $('#BoldFace').append($(BoldFace.html));
     $("#BoldFace").draggable({handle: 'h1'});
     BoldFace.setupSelectionList();
     BoldFace.populateFontsList();
+    $('#BoldFace div.loading').remove();  // Removing the loading scren.
   };
   
   BoldFace.htmlToBodyReady = function(data, textStatus, jqXHR) {
@@ -100,20 +103,22 @@
   };
   
   BoldFace.loadGoogleWebFonts = function () {
+    _.each(GoogleWebFonts.items, BoldFace.loadGoogleWebFont);
+  };
+  
+  BoldFace.loadGoogleWebFont = function (font) {
     var herf_family,
         link,
         base_href = "http://fonts.googleapis.com/css?family=",
         head = $('head');
-    _.each(GoogleWebFonts.items, function (font) {
-      herf_family = font.family.replace(/ /g, '+');
-      link = $("<link rel='stylesheet' type='text/css'>");
-      href = base_href + herf_family
-      if (font.variants.length > 1) {
-        href = href + ':' + _.select(font.variants, function(item){ return !(item === "regular"); }).join(',');
-      }
-      link.attr('href', href);
-      head.append(link);
-    });
+    herf_family = font.family.replace(/ /g, '+');
+    link = $("<link rel='stylesheet' type='text/css'>");
+    href = base_href + herf_family
+    if (font.variants.length > 1) {
+      href = href + ':' + _.select(font.variants, function(item){ return !(item === "regular"); }).join(',');
+    }
+    link.attr('href', href);
+    head.append(link);
   };
   
   BoldFace.selectionChanged = function () {
@@ -198,6 +203,50 @@
   BoldFace.init_after_jQueryIsLoaded = function() {
     BoldFace.checkFor_jQueryInterval = setInterval(BoldFace.checkFor_jQuery, 100);
   }
+  
+  BoldFace.addLoadingScreen = function () {
+    var div, loading, message;
+    BoldFace.load_app_css('/agirorn/BoldFace/master/build/BoldFace.css');
+    
+    div = document.createElement('div');
+    div.id = 'BoldFace';
+    
+    loading = document.createElement('div');
+    loading.classList.add('loading');
+    div.appendChild(loading);
+    
+    message = document.createElement('p');
+    message.classList.add('message');
+    loading.appendChild(message);
+    
+    document.getElementsByTagName('body')[0].appendChild(div);
+    BoldFace.animateLoading();
+  };
+  
+  BoldFace.animateLoading = function () {
+    var bold_face = document.getElementById('BoldFace');
+    if (typeof(bold_face) !== 'undefined') {
+      var message = bold_face.getElementsByClassName('message')[0];
+      if (typeof(message) !== 'undefined') {
+        if (message.textContent === '') {
+          message.textContent = 'Loading';
+        } else if (message.textContent === 'Loading') {
+          message.textContent = 'Loading.';
+        } else if (message.textContent === 'Loading.') {
+          message.textContent = 'Loading..';
+        } else if (message.textContent === 'Loading..') {
+          message.textContent = 'Loading...';
+        } else if (message.textContent === 'Loading...') {
+          message.textContent = 'Loading....';
+        } else if (message.textContent === 'Loading....') {
+          message.textContent = 'Loading.....';
+        } else if (message.textContent === 'Loading.....') {
+          message.textContent = 'Loading.';
+        }
+        window.setTimeout(BoldFace.animateLoading, 300);
+      }
+    }
+  };
   
   // Lest make it global
   window.BoldFace = BoldFace;

@@ -88,6 +88,21 @@
   width: 90px;
   height: 60px;
 }
+#BoldFace div.loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: blue;
+  color: #FFF;
+  text-align: left;
+}
+#BoldFace div.loading p {
+  padding-left: 140px;
+  margin-top: 120px;
+  font-size: 70px;
+}
 
 ul {
   /*
