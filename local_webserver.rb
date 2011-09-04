@@ -27,6 +27,16 @@ class MyApp < Sinatra::Base
         return false
       end
     end
+    
+    def get_compressed_html
+      args = [
+        ["-jar", "tools/htmlcompressor-1.5.1.jar"],
+        ["html/BoldFace.html"]
+      ]
+      command = "java #{args.flatten.join(' ')}"
+      output = `#{command}`
+      output.gsub!('"', "'")
+    end
   end
   
   get '/' do
@@ -42,7 +52,8 @@ class MyApp < Sinatra::Base
   get '/agirorn/BoldFace/master/build/BoldFace.js' do
     content_type Rack::Mime.mime_type('.js'), :charset => 'utf-8'
     text = get_file_content('js/BoldFace.js')
-    html = File.read('build/BoldFace.html').gsub!('"', "'")
+    html = get_compressed_html
+    
     new_html = 'BoldFace.html = ' + '"' + html + '";'
     text.gsub!("BoldFace.html = '<div></div>';", new_html)
     production? ? Uglifier.compile(text) : text
